@@ -5,7 +5,7 @@ exports.createCategory = async (req, res) => {
         const {name, description} = req.body;
 
         //validacion
-        if (!name || typeof name !== 'string' || !name,
+        if (!name || typeof name !== 'string' || !name.
             trim()){
                 return res.status(400).json({
                     success: false, 
@@ -66,7 +66,7 @@ exports.createCategory = async (req, res) => {
 exports.getCategories = async (req, res) => {
     try {
         const categories = await Category.find().sort({createdAt:-1});
-        res.status(200).jsom({
+        res.status(200).json({
             success: true,
             data: categories,
         });

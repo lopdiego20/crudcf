@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGODB_URI)
 .catch(err => console.error('X Error de MongoDB', err));
 
 //rutas
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/subcategories', subcategoryRoutes);

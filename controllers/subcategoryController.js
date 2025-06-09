@@ -5,7 +5,6 @@ const Category = require('../models/category');
 exports.createSubcategory = async (req, res) => {
     try {
         const {name, description, category} = req.body;
-
         //Validar que la categoria exista
         const parentCategory = await Category.findById(category);
         if(!parentCategory){
@@ -14,7 +13,6 @@ exports.createSubcategory = async (req, res) => {
                 message: 'La categoria no existe'
             });
         }
-
         const newSubcategory = new Subcategory({
             name: name.trim(),
             description: description.trim(),
@@ -48,7 +46,7 @@ exports.createSubcategory = async (req, res) => {
 //Obtener todas las Subcategoria
 exports.getSubcategories = async (req, res) =>{
     try{
-        const Subcategoria = await Subcategory.find()
+        const subcategoria = await Subcategory.find()
         .populate('category','name');
         res.status(200).json({
             success: true,
@@ -108,7 +106,7 @@ exports.updateSubcategory = async (req, res) => {
                 description: description? description.trim(): undefined,
                 category
             },
-            {new: tru, runValidators: true}
+            {new: true, runValidators: true}
         );
         if(!updateSubcategory){
             return res.status(404).json({
@@ -134,8 +132,8 @@ exports.updateSubcategory = async (req, res) => {
 //Eliminar subcategoria
 exports.deleteSubcategory = async (req, res) => {
     try{
-        const deteleSubcategory = await Subcategory.findByIdAndDelete(req.params.id);
-        if(!this.deleteSubcategory){
+        const deteledSubcategory = await Subcategory.findByIdAndDelete(req.params.id);
+        if(!deteledSubcategory){
             return res.status(404).json({
                 success: false,
                 message: 'Subcategoria no encontrada'
