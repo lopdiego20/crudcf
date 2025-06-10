@@ -4,6 +4,12 @@ const Category = require('../models/category');
 // Crear subcategoria
 exports.createSubcategory = async (req, res) => {
     try {
+        if (req.userRole !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const {name, description, category} = req.body;
         //Validar que la categoria exista
         const parentCategory = await Category.findById(category);
@@ -86,6 +92,12 @@ exports.getSubcategoryById = async (req, res) => {
 //Actualizar subcategoria
 exports.updateSubcategory = async (req, res) => {
     try {
+        if (req.userRole !== "admin", "coordinador") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const {name, description, category} = req.body;
 
         //Verificar si se cambia la categoria
@@ -132,6 +144,12 @@ exports.updateSubcategory = async (req, res) => {
 //Eliminar subcategoria
 exports.deleteSubcategory = async (req, res) => {
     try{
+        if (req.userRole !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const deteledSubcategory = await Subcategory.findByIdAndDelete(req.params.id);
         if(!deteledSubcategory){
             return res.status(404).json({

@@ -4,6 +4,12 @@ const Subcategory = require('../models/Subcategory');
 
 exports.createProduct = async (req, res) => {
     try {
+        if (req.userRole !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const { name, description, price, stock, category, subcategory } = req.body;
 
         //validacion de campos requeridos
@@ -135,6 +141,12 @@ exports.getProductById = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
     try {
+        if (req.userRole !== "admin", "coordinador") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const { name, description, price, stock, category, subcategory } = req.body;
         const updateData = {};
 
@@ -208,6 +220,12 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
     try{
+        if (req.userRole !== "admin") {
+        return res.status(403).json({
+            success: false,
+            message: 'No tienes permiso para esta accion'
+            });
+        }
         const product = await Product.findByIdAndDelete(req.params.id);
         if(!product){
             return res.status(404).json({

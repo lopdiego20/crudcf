@@ -5,12 +5,25 @@ const bcrypt = require ('bcryptjs');
 exports.getAllUser = async (req, res) => {
     console.log('[CONTROLLER] Ejecutando getAllUsers'); //diagnostico
     try{
+         if (req.userRole === 'auxiliar' && req.userId !== user.id.toString()){
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permisos para ver este usuario'
+            });
+        }
+
+        if (req.userRole === 'coordinador' && user.role === 'admin'){
+            return res.status(403).json({
+                success: false,
+                message: 'No puedes ver usuarios admin'
+            });
+        }      
         const users = await User.find().select('username email role createdAt updatedAt __v').populate('role', 'name');
         console.log('[CONTROLLER] Usarios enocntrados: ', users.length);
         res.status(200).json({
             success: true,
             data: users
-        });
+        });    
     }catch(error){
         console.error('[CONTROLLER] Error en getAllUsers: ', error.message);//Diagnostico
         res.status(500).json({
