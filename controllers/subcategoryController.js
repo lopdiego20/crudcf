@@ -50,7 +50,7 @@ exports.getSubcategories = async (req, res) =>{
         .populate('category','name');
         res.status(200).json({
             success: true,
-            data: Subcategoria
+            data: subcategoria
         });
     }catch(error){
         console.error('Error al obtener la subcategoria: ', error);

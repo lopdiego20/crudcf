@@ -5,7 +5,7 @@ const bcrypt = require ('bcryptjs');
 exports.getAllUser = async (req, res) => {
     console.log('[CONTROLLER] Ejecutando getAllUsers'); //diagnostico
     try{
-        const users = await User.find().select('passsword');
+        const users = await User.find().select('username email role createdAt updatedAt __v').populate('role', 'name');
         console.log('[CONTROLLER] Usarios enocntrados: ', users.length);
         res.status(200).json({
             success: true,
@@ -23,8 +23,7 @@ exports.getAllUser = async (req, res) => {
 // Obtener usuario especifico
 exports.getUserById = async (req, res) => {
     try{
-        const user = await user.findById(req.params.id).select('-password');
-
+        const user = await User.findById(req.params.id).select('-password');
         if(!user){
             return res.status(404).json({
                 success: false,
@@ -33,14 +32,14 @@ exports.getUserById = async (req, res) => {
         }
 
         //validacion de acceso 
-        if (req.user.role === 'auxiliar' && req.user.id !== user.id.toString()){
+        if (req.userRole === 'auxiliar' && req.userId !== user.id.toString()){
             return res.status(403).json({
                 success: false,
-                message: 'No tienes permisos para ver ests usuario'
+                message: 'No tienes permisos para ver este usuario'
             });
         }
 
-        if (req.user.role === 'coordinador' && user.role === 'admin'){
+        if (req.userRole === 'coordinador' && user.role === 'admin'){
             return res.status(403).json({
                 success: false,
                 message: 'No puedes ver usuarios admin'
@@ -49,7 +48,7 @@ exports.getUserById = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            user
+            data: user
         });
 
     }catch(error){
