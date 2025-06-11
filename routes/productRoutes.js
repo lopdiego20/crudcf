@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productControllers');
 const {check} = require('express-validator');
+const { verifyToken}=require ('../middlewares/authJwt');
+const {checkRole}=require ('../middlewares/role');
 
 const validateProduct = [
     check('name').not().isEmpty().withMessage('El nombre es obligatorio'),
@@ -12,10 +14,25 @@ const validateProduct = [
     check('subcategory').not().isEmpty().withMessage('La subcategoria es obligatoria'),
 ];
 
-router.post('/', validateProduct,productController.createProduct);
-router.get('/', productController.getProducts);
-router.get('/:id', productController.getProductById);
-router.put('/:id', validateProduct, productController.updateProduct);
-router.delete('/:id', productController.deleteProduct);
+router.post('/',
+    verifyToken,
+    checkRole('admin','coordinador'),
+    validateProduct,productController.createProduct);
+router.get('/',
+    verifyToken,
+    checkRole('admin','coordinador','auxiliar'),
+    productController.getProducts);
+router.get('/:id',
+    verifyToken,
+    checkRole('admin','coordinador','auxiliar'),
+    productController.getProductById);
+router.put('/:id',
+    verifyToken,
+    checkRole('admin','coordinador'),
+    validateProduct, productController.updateProduct);
+router.delete('/:id',
+    verifyToken,
+    checkRole('admin'),
+    productController.deleteProduct);
 
 module.exports = router;

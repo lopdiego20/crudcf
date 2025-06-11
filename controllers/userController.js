@@ -5,14 +5,7 @@ const bcrypt = require ('bcryptjs');
 exports.getAllUser = async (req, res) => {
     console.log('[CONTROLLER] Ejecutando getAllUsers'); //diagnostico
     try{
-         if (req.userRole === 'auxiliar' && req.userId !== user.id.toString()){
-            return res.status(403).json({
-                success: false,
-                message: 'No tienes permisos para ver este usuario'
-            });
-        }
-
-        if (req.userRole === 'coordinador' && user.role === 'admin'){
+        if (req.userRole === 'coordinador' && User.role === 'admin'){
             return res.status(403).json({
                 success: false,
                 message: 'No puedes ver usuarios admin'

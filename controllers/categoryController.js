@@ -2,12 +2,6 @@ const Category = require ('../models/category')
 
 exports.createCategory = async (req, res) => {
     try {
-        if (req.userRole !== "admin") {
-            return res.status(403).json({
-                success: false,
-                message: 'No tienes permiso para esta accion'
-            });
-        }
         const {name, description} = req.body;
 
         //validacion
@@ -110,12 +104,6 @@ exports.getCategoryById = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
     try {
-        if (req.userRole !== "admin", "coordinador") {
-            return res.status(403).json({
-                success: false,
-                message: 'No tienes permiso para esta accion'
-            });
-        }
         const {name, description} = req.body;
         const updateData= {};
 
@@ -164,12 +152,6 @@ exports.updateCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
     try{
-        if (req.userRole !== "admin") {
-            return res.status(403).json({
-                success: false,
-                message: 'No tienes permiso para esta accion'
-            });
-        }
         const deleteCategory = await Category.findByIdAndDelete(req.params.id);
         if(!deleteCategory){
             return res.status(404).json({
